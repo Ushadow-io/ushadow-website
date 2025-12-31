@@ -11,10 +11,11 @@ const footerNavigation = {
     { name: 'Issues', href: 'https://github.com/Ushadow-io/Ushadow/issues' },
     { name: 'Discussions', href: 'https://github.com/Ushadow-io/Ushadow/discussions' },
   ],
-  integrations: [
-    { name: 'Chronicle', href: 'https://github.com/chronicler-ai' },
-    { name: 'MCP', href: '/features#mcp' },
-    { name: 'Omi Necklace', href: 'https://www.omi.me' },
+  features: [
+    { name: 'Orchestration', href: '/features#orchestration' },
+    { name: 'Recording', href: '/features#recording' },
+    { name: 'Secrets', href: '/features#secrets' },
+    { name: 'Add-ons', href: '/features#addons' },
   ],
 };
 
@@ -33,10 +34,10 @@ export default function Footer() {
                 height={32}
                 className="h-8 w-auto"
               />
-              <span className="text-lg font-bold text-text-primary">ushadow</span>
+              <span className="text-lg font-bold text-text-primary">Ushadow</span>
             </Link>
             <p className="text-sm text-text-secondary max-w-xs">
-              AI Orchestration Platform - Unified interface for Chronicle, MCP, Omi, and more.
+              AI Orchestration Platform - Service orchestration, recording, secrets, and easy add-ons.
             </p>
             {/* Powered by Chronicle badge */}
             <a
@@ -87,18 +88,16 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-text-primary">Integrations</h3>
+              <h3 className="text-sm font-semibold text-text-primary">Features</h3>
               <ul role="list" className="mt-4 space-y-3">
-                {footerNavigation.integrations.map((item) => (
+                {footerNavigation.features.map((item) => (
                   <li key={item.name}>
-                    <a
+                    <Link
                       href={item.href}
-                      target={item.href.startsWith('http') ? '_blank' : undefined}
-                      rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className="text-sm text-text-muted hover:text-primary-400 transition-colors"
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

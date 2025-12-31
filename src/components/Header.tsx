@@ -27,7 +27,7 @@ export default function Header() {
                 className="h-8 w-auto transition-transform group-hover:scale-105"
               />
               <span className="text-xl font-bold text-text-primary">
-                ushadow
+                Ushadow
               </span>
             </Link>
           </div>

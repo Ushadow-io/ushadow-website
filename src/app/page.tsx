@@ -1,44 +1,55 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import CopyButton from '@/components/CopyButton';
 
 const features = [
   {
-    name: 'Chronicle Integration',
-    description: 'Audio processing, transcription, conversations, and memory management. Your personal AI memory system.',
+    name: 'Service Orchestration',
+    description: 'Deploy and manage services across Unodes using Docker and Kubernetes. Scale from local development to production clusters.',
+    icon: (
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" />
+      </svg>
+    ),
+    color: 'primary',
+  },
+  {
+    name: 'Meeting & Conversation Recording',
+    description: 'Record meetings on the web and capture conversations on-the-go with Omi wearable integration. Build searchable memories automatically.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
       </svg>
     ),
+    color: 'accent',
+  },
+  {
+    name: 'Secret & Key Management',
+    description: 'Securely share secrets and API keys across containers. Centralized credential management with automatic rotation support.',
+    icon: (
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+      </svg>
+    ),
     color: 'primary',
   },
   {
-    name: 'MCP Protocol',
-    description: 'Model Context Protocol for multi-protocol AI service integrations. Connect any AI service seamlessly.',
+    name: 'Service Add-on Wizard',
+    description: 'Easily extend your platform with new services. Guided wizards walk you through configuration and deployment in minutes.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
       </svg>
     ),
     color: 'accent',
   },
-  {
-    name: 'Omi Necklace',
-    description: 'Seamless integration with the Omi AI wearable. Capture conversations and build memories hands-free.',
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-      </svg>
-    ),
-    color: 'primary',
-  },
 ];
 
 const stats = [
-  { label: 'Docker Ready', value: '1-Click' },
-  { label: 'Kubernetes', value: 'Native' },
+  { label: 'Deployment', value: 'Docker & K8s' },
+  { label: 'Secrets', value: 'Encrypted' },
   { label: 'Open Source', value: 'Apache 2.0' },
-  { label: 'Multi-env', value: 'Worktree' },
+  { label: 'Add-ons', value: 'Wizard Setup' },
 ];
 
 export default function Home() {
@@ -70,11 +81,11 @@ export default function Home() {
             {/* Logo */}
             <div className="flex justify-center mb-8">
               <Image
-                src="/logo/android-chrome-192x192.png"
+                src="/logo/ushadow-logo-large.png"
                 alt="Ushadow"
-                width={120}
-                height={120}
-                className="h-28 w-auto"
+                width={500}
+                height={500}
+                className="h-56 sm:h-64 w-auto"
                 priority
               />
             </div>
@@ -88,8 +99,8 @@ export default function Home() {
 
             {/* Subheadline */}
             <p className="mt-6 text-lg leading-8 text-text-secondary max-w-2xl mx-auto">
-              Ushadow is an AI orchestration platform that provides a unified dashboard and API for managing
-              Chronicle, MCP, Omi, and more. Deploy anywhere with Docker or Kubernetes.
+              Orchestrate services across Unodes with Docker and Kubernetes. Record meetings, capture conversations
+              with Omi, manage secrets securely, and extend with easy add-on wizards.
             </p>
 
             {/* CTAs */}
@@ -120,6 +131,7 @@ export default function Home() {
                 <code className="text-sm text-primary-400 font-mono">
                   git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh
                 </code>
+                <CopyButton text="git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh" />
               </div>
             </div>
           </div>
@@ -195,11 +207,11 @@ export default function Home() {
           <div className="mx-auto max-w-2xl text-center mb-16">
             <h2 className="text-base font-semibold text-accent-400">Architecture</h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
-              Built for Scale
+              Distributed Unodes
             </p>
             <p className="mt-6 text-lg text-text-secondary">
-              A modern microservices architecture with React frontend, FastAPI backend,
-              and pluggable service integrations.
+              Deploy services across distributed Unodes. Each node runs Docker or Kubernetes
+              with shared secrets and centralized orchestration.
             </p>
           </div>
 
@@ -207,32 +219,30 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             <div className="rounded-2xl bg-surface-800 border border-surface-500/30 p-8 font-mono text-sm overflow-x-auto">
               <pre className="text-text-secondary whitespace-pre">
-{`┌─────────────────────────────────────────────┐
-│       ushadow Frontend (React)              │
-│   ┌──────────┬──────────┬──────────┐        │
-│   │Dashboard │Chronicle │ MCP Hub  │        │
-│   ├──────────┼──────────┼──────────┤        │
-│   │  Agents  │Workflows │ Settings │        │
-│   └──────────┴──────────┴──────────┘        │
-└─────────────────────┬───────────────────────┘
-                      │
-┌─────────────────────┴───────────────────────┐
-│       ushadow Backend (FastAPI)             │
-│   ┌──────────┬──────────┬──────────┐        │
-│   │   API    │Chronicle │   MCP    │        │
-│   │ Gateway  │  Proxy   │ Service  │        │
-│   ├──────────┼──────────┼──────────┤        │
-│   │  Agent   │ Workflow │  Auth    │        │
-│   │ Service  │ Service  │ Service  │        │
-│   └──────────┴──────────┴──────────┘        │
-└─────────────────────┬───────────────────────┘
-                      │
-       ┌──────────────┼──────────────┐
-       ▼              ▼              ▼
-  ┌─────────┐   ┌─────────┐   ┌─────────┐
-  │Chronicle│   │ MongoDB │   │  Redis  │
-  │(Memory) │   │ (Data)  │   │ (Cache) │
-  └─────────┘   └─────────┘   └─────────┘`}
+{`┌─────────────────────────────────────────────────────┐
+│              Ushadow Dashboard                      │
+│   ┌───────────┬───────────┬───────────┬──────────┐  │
+│   │ Services  │ Recording │  Secrets  │ Add-ons  │  │
+│   └───────────┴───────────┴───────────┴──────────┘  │
+└───────────────────────┬─────────────────────────────┘
+                        │
+┌───────────────────────┴─────────────────────────────┐
+│              Orchestration Layer                    │
+│   ┌───────────────────┬─────────────────────────┐   │
+│   │  Secret Manager   │    Add-on Wizard        │   │
+│   │  (Keys & Creds)   │    (Service Setup)      │   │
+│   └───────────────────┴─────────────────────────┘   │
+└───────────────────────┬─────────────────────────────┘
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+   ┌─────────┐    ┌─────────┐    ┌─────────┐
+   │ Unode 1 │    │ Unode 2 │    │ Unode N │
+   │(Docker) │    │  (K8s)  │    │  (K8s)  │
+   ├─────────┤    ├─────────┤    ├─────────┤
+   │Chronicle│    │   Omi   │    │ Custom  │
+   │Recorder │    │ Bridge  │    │ Service │
+   └─────────┘    └─────────┘    └─────────┘`}
               </pre>
             </div>
           </div>

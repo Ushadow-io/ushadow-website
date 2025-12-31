@@ -134,35 +134,6 @@ export default function DocsPage() {
           </div>
         </section>
 
-        {/* Default Credentials */}
-        <section className="mb-16">
-          <div className="rounded-xl bg-accent-900/20 border border-accent-500/30 p-6">
-            <div className="flex gap-4">
-              <div className="flex-shrink-0">
-                <svg className="h-6 w-6 text-accent-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-accent-300 mb-2">Default Credentials</h3>
-                <p className="text-text-secondary text-sm mb-4">
-                  Unless changed during setup, use these credentials to log in:
-                </p>
-                <div className="space-y-2 font-mono text-sm">
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">Email:</span>
-                    <span className="text-text-primary">admin@ushadow.local</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">Password:</span>
-                    <span className="text-text-primary">ushadow-123</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Service URLs */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold text-text-primary mb-6">Service URLs</h2>

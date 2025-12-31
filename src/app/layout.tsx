@@ -16,12 +16,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Ushadow - AI Orchestration Platform",
-  description: "Unified interface for Chronicle, MCP, Omi, and more. Orchestrate your AI services with a single, powerful dashboard.",
-  keywords: ["AI", "orchestration", "Chronicle", "MCP", "Omi", "wearable", "transcription", "memory"],
+  description: "Service orchestration with Unodes, meeting recording, secret management, and easy add-on wizards. Deploy with Docker or Kubernetes.",
+  keywords: ["AI", "orchestration", "Unodes", "Docker", "Kubernetes", "secrets", "recording", "Omi", "wearable"],
   authors: [{ name: "Ushadow Team" }],
   openGraph: {
     title: "Ushadow - AI Orchestration Platform",
-    description: "Unified interface for Chronicle, MCP, Omi, and more.",
+    description: "Service orchestration, meeting recording, secrets, and easy add-ons.",
     url: "https://ushadow.io",
     siteName: "Ushadow",
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Ushadow - AI Orchestration Platform",
-    description: "Unified interface for Chronicle, MCP, Omi, and more.",
+    description: "Service orchestration, meeting recording, secrets, and easy add-ons.",
     images: ["/logo/android-chrome-512x512.png"],
   },
   icons: {
