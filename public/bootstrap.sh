@@ -261,13 +261,6 @@ main() {
     echo "  Bootstrap Complete!"
     echo "=========================================="
     echo ""
-    echo "This machine is now ready to join a Ushadow cluster."
-    echo ""
-    echo "Next steps:"
-    echo "  1. Go to your Ushadow dashboard"
-    echo "  2. Navigate to Cluster > Generate Join Token"
-    echo "  3. Copy the join command and run it on this machine"
-    echo ""
 
     # Show system info
     TS_IP=$($SUDO tailscale ip -4 2>/dev/null || echo "unknown")
@@ -277,6 +270,122 @@ main() {
     echo "  Tailscale IP: $TS_IP"
     echo "  Docker:       $(docker --version 2>/dev/null | cut -d' ' -f3 | cut -d',' -f1 || echo 'not running')"
     echo ""
+
+    # Interactive setup dialog
+    setup_dialog
+}
+
+# Interactive dialog for next steps
+setup_dialog() {
+    echo "=========================================="
+    echo "  What would you like to do?"
+    echo "=========================================="
+    echo ""
+    echo "  1) Join an existing cluster (I have an invite code)"
+    echo "  2) Start a new Ushadow server (become a leader node)"
+    echo "  3) Exit (I'll set up later)"
+    echo ""
+
+    read -p "Enter choice [1-3]: " choice
+
+    case $choice in
+        1)
+            join_existing_cluster
+            ;;
+        2)
+            start_new_server
+            ;;
+        3)
+            echo ""
+            log_info "You can run this script again or manually set up later."
+            echo ""
+            echo "To join a cluster later, get the join command from your Ushadow dashboard:"
+            echo "  Cluster > Add Node > Copy the join command"
+            echo ""
+            ;;
+        *)
+            log_warn "Invalid choice. Exiting."
+            ;;
+    esac
+}
+
+# Join an existing cluster with invite code
+join_existing_cluster() {
+    echo ""
+    echo "=========================================="
+    echo "  Join Existing Cluster"
+    echo "=========================================="
+    echo ""
+    echo "Paste your join command or invite URL below."
+    echo "(Get this from: Ushadow Dashboard > Cluster > Add Node)"
+    echo ""
+
+    read -p "Join command or URL: " join_input
+
+    if [ -z "$join_input" ]; then
+        log_error "No input provided."
+        return 1
+    fi
+
+    # Check if it's a curl command or just a URL
+    if echo "$join_input" | grep -q "^curl"; then
+        # It's already a curl command, execute it
+        log_info "Executing join command..."
+        eval "$join_input"
+    elif echo "$join_input" | grep -q "^https\?://"; then
+        # It's a URL, fetch and execute
+        log_info "Fetching join script from URL..."
+        curl -sL "$join_input" | sh
+    else
+        log_error "Invalid input. Please paste the full curl command or URL."
+        return 1
+    fi
+}
+
+# Start a new Ushadow server
+start_new_server() {
+    echo ""
+    echo "=========================================="
+    echo "  Start New Ushadow Server"
+    echo "=========================================="
+    echo ""
+
+    # Default install location
+    INSTALL_DIR="${HOME}/ushadow"
+
+    read -p "Install directory [$INSTALL_DIR]: " custom_dir
+    if [ -n "$custom_dir" ]; then
+        INSTALL_DIR="$custom_dir"
+    fi
+
+    # Check if directory exists
+    if [ -d "$INSTALL_DIR" ]; then
+        log_warn "Directory $INSTALL_DIR already exists."
+        read -p "Use existing installation? [Y/n]: " use_existing
+        if [ "$use_existing" = "n" ] || [ "$use_existing" = "N" ]; then
+            log_error "Aborting. Please choose a different directory or remove the existing one."
+            return 1
+        fi
+    else
+        log_info "Cloning Ushadow repository..."
+        git clone https://github.com/Ushadow-io/Ushadow.git "$INSTALL_DIR"
+        if [ $? -ne 0 ]; then
+            log_error "Failed to clone repository."
+            return 1
+        fi
+    fi
+
+    cd "$INSTALL_DIR" || { log_error "Failed to enter $INSTALL_DIR"; return 1; }
+
+    # Run go.sh
+    if [ -f "go.sh" ]; then
+        log_info "Starting Ushadow server..."
+        chmod +x go.sh
+        ./go.sh
+    else
+        log_error "go.sh not found in $INSTALL_DIR"
+        return 1
+    fi
 }
 
 main "$@"
