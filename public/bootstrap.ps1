@@ -12,7 +12,7 @@
 # to connect this node to your cluster.
 # =============================================================================
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 function Write-Step { param($msg) Write-Host "`n[$script:step/4] $msg" -ForegroundColor Cyan; $script:step++ }
 function Write-Ok { param($msg) Write-Host "  [OK] $msg" -ForegroundColor Green }
@@ -57,9 +57,19 @@ Write-Step "Checking Tailscale installation..."
 
 $tsPath = "$env:ProgramFiles\Tailscale\tailscale.exe"
 
+# Also check if tailscale is in PATH
+if (-not (Test-Path $tsPath)) {
+    $tsInPath = Get-Command tailscale -ErrorAction SilentlyContinue
+    if ($tsInPath) { $tsPath = $tsInPath.Source }
+}
+
 if (Test-Path $tsPath) {
-    $tsVersion = & $tsPath version 2>$null | Select-Object -First 1
-    Write-Ok "Tailscale already installed ($tsVersion)"
+    try {
+        $tsVersion = & $tsPath version 2>$null | Select-Object -First 1
+        Write-Ok "Tailscale already installed ($tsVersion)"
+    } catch {
+        Write-Ok "Tailscale already installed"
+    }
 } else {
     Write-Host "  Installing Tailscale..." -ForegroundColor Yellow
 
@@ -89,6 +99,17 @@ if ($needRestart) {
 
 # Step 3: Check Tailscale connection
 Write-Step "Checking Tailscale connection..."
+
+# Re-check tsPath in case it was just installed
+if (-not (Test-Path $tsPath)) {
+    $tsInPath = Get-Command tailscale -ErrorAction SilentlyContinue
+    if ($tsInPath) { $tsPath = $tsInPath.Source }
+}
+
+if (-not (Test-Path $tsPath)) {
+    Write-Warn "Tailscale not found. Please restart PowerShell and run this script again."
+    exit 0
+}
 
 $connected = $false
 for ($i = 0; $i -lt 30; $i++) {
