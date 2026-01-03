@@ -5,6 +5,12 @@ import CopyButton from './CopyButton';
 
 type OS = 'windows' | 'mac' | 'linux' | 'unknown';
 
+interface Dependency {
+  name: string;
+  url: string;
+  note?: string;
+}
+
 function detectOS(): OS {
   if (typeof window === 'undefined') return 'unknown';
 
@@ -36,7 +42,7 @@ const installCommands = {
   },
 };
 
-const dependencies = {
+const dependencies: Record<OS, Dependency[]> = {
   windows: [
     { name: 'Git', url: 'https://git-scm.com/download/win' },
     { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/' },
