@@ -20,6 +20,22 @@ function Write-Ok { param($msg) Write-Host "  [OK] $msg" -ForegroundColor Green 
 function Write-Warn { param($msg) Write-Host "  [WARN] $msg" -ForegroundColor Yellow }
 function Write-Err { param($msg) Write-Host "  [ERROR] $msg" -ForegroundColor Red }
 
+function Refresh-Path {
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+    # Also add common install locations
+    $extraPaths = @(
+        "$env:LOCALAPPDATA\Programs\Python\Python312",
+        "$env:LOCALAPPDATA\Programs\Python\Python312\Scripts",
+        "$env:ProgramFiles\Git\bin",
+        "$env:ProgramFiles\Git\cmd"
+    )
+    foreach ($p in $extraPaths) {
+        if ((Test-Path $p) -and ($env:Path -notlike "*$p*")) {
+            $env:Path = "$p;$env:Path"
+        }
+    }
+}
+
 $repoUrl = "https://github.com/Ushadow-io/Ushadow.git"
 $installDir = "$env:USERPROFILE\ushadow"
 
@@ -47,11 +63,10 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
     $gitVersion = git --version 2>$null
     Write-Ok "Git already installed ($gitVersion)"
 } else {
-    Write-Host "  Installing Git..." -ForegroundColor Yellow
-    winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements | Out-Null
+    Write-Host "  Installing Git (this may take a few minutes)..." -ForegroundColor Yellow
+    winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements
 
-    # Refresh PATH
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+    Refresh-Path
 
     if (Get-Command git -ErrorAction SilentlyContinue) {
         Write-Ok "Git installed"
@@ -65,30 +80,52 @@ Write-Step 2 5 "Checking Python installation..."
 
 # Check if real Python is installed (not Windows Store alias)
 $pythonInstalled = $false
-try {
-    $pyVersion = python --version 2>&1
-    if ($LASTEXITCODE -eq 0 -and $pyVersion -match "Python \d") {
-        $pythonInstalled = $true
-        Write-Ok "Python already installed ($pyVersion)"
+$pythonCmd = $null
+
+# Check common Python locations first
+$pythonPaths = @(
+    "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe",
+    "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe",
+    "$env:LOCALAPPDATA\Programs\Python\Python310\python.exe",
+    "$env:ProgramFiles\Python312\python.exe",
+    "$env:ProgramFiles\Python311\python.exe"
+)
+
+foreach ($pp in $pythonPaths) {
+    if (Test-Path $pp) {
+        $pythonCmd = $pp
+        break
     }
-} catch {}
+}
 
-if (-not $pythonInstalled) {
-    Write-Host "  Installing Python..." -ForegroundColor Yellow
-    winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements | Out-Null
-
-    # Refresh PATH
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-
+if ($pythonCmd) {
+    $pyVersion = & $pythonCmd --version 2>&1
+    $pythonInstalled = $true
+    Write-Ok "Python already installed ($pyVersion)"
+} else {
+    # Try command in PATH
     try {
         $pyVersion = python --version 2>&1
         if ($LASTEXITCODE -eq 0 -and $pyVersion -match "Python \d") {
-            Write-Ok "Python installed"
-        } else {
-            Write-Warn "Python installed but not in PATH. Please restart PowerShell after setup."
+            $pythonInstalled = $true
+            Write-Ok "Python already installed ($pyVersion)"
         }
-    } catch {
-        Write-Warn "Python installed but not in PATH. Please restart PowerShell after setup."
+    } catch {}
+}
+
+if (-not $pythonInstalled) {
+    Write-Host "  Installing Python (this may take a few minutes)..." -ForegroundColor Yellow
+    winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
+
+    Refresh-Path
+
+    # Check if Python is now available
+    $pythonCmd = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
+    if (Test-Path $pythonCmd) {
+        $pyVersion = & $pythonCmd --version 2>&1
+        Write-Ok "Python installed ($pyVersion)"
+    } else {
+        Write-Warn "Python installed but may need a restart to be available."
     }
 }
 
@@ -99,8 +136,8 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     $dockerVersion = docker --version 2>$null
     Write-Ok "Docker already installed ($dockerVersion)"
 } else {
-    Write-Host "  Installing Docker Desktop..." -ForegroundColor Yellow
-    winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements | Out-Null
+    Write-Host "  Installing Docker Desktop (this may take several minutes)..." -ForegroundColor Yellow
+    winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements
     Write-Ok "Docker Desktop installed"
     Write-Warn "You'll need to start Docker Desktop and complete initial setup."
 }
@@ -108,11 +145,13 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
 # Step 4: Clone repository
 Write-Step 4 5 "Setting up Ushadow repository..."
 
+Refresh-Path
+
 if (Test-Path $installDir) {
     Write-Host "  Directory exists, pulling latest..." -ForegroundColor Yellow
     Push-Location $installDir
     try {
-        git pull 2>&1 | Out-Null
+        git pull
         Write-Ok "Repository updated"
     } catch {
         Write-Warn "Could not update repository"
@@ -121,7 +160,7 @@ if (Test-Path $installDir) {
 } else {
     Write-Host "  Cloning repository to $installDir..." -ForegroundColor Yellow
     try {
-        git clone $repoUrl $installDir 2>&1 | Out-Null
+        git clone $repoUrl $installDir
         Write-Ok "Repository cloned"
     } catch {
         Write-Err "Failed to clone repository"
