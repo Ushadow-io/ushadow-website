@@ -3,9 +3,11 @@
 # =============================================================================
 # This script sets up a Ushadow server on Windows by:
 #   - Installing Git
-#   - Cloning the Ushadow repository
+#   - Installing Python
 #   - Installing Docker Desktop
-#   - Running the setup script
+#   - Cloning the Ushadow repository
+#
+# Tailscale is configured later via the setup wizard.
 #
 # Usage:
 #   iex (irm https://ushadow.io/server-install.ps1)
@@ -58,8 +60,28 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
     }
 }
 
-# Step 2: Install Docker Desktop
-Write-Step 2 5 "Checking Docker installation..."
+# Step 2: Install Python
+Write-Step 2 5 "Checking Python installation..."
+
+if (Get-Command python -ErrorAction SilentlyContinue) {
+    $pyVersion = python --version 2>$null
+    Write-Ok "Python already installed ($pyVersion)"
+} else {
+    Write-Host "  Installing Python..." -ForegroundColor Yellow
+    winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements | Out-Null
+
+    # Refresh PATH
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
+    if (Get-Command python -ErrorAction SilentlyContinue) {
+        Write-Ok "Python installed"
+    } else {
+        Write-Warn "Python installed but not in PATH. Please restart PowerShell after setup."
+    }
+}
+
+# Step 3: Install Docker Desktop
+Write-Step 3 5 "Checking Docker installation..."
 
 if (Get-Command docker -ErrorAction SilentlyContinue) {
     $dockerVersion = docker --version 2>$null
@@ -69,28 +91,6 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements | Out-Null
     Write-Ok "Docker Desktop installed"
     Write-Warn "You'll need to start Docker Desktop and complete initial setup."
-}
-
-# Step 3: Install Tailscale
-Write-Step 3 5 "Checking Tailscale installation..."
-
-$tsPath = "$env:ProgramFiles\Tailscale\tailscale.exe"
-if (-not (Test-Path $tsPath)) {
-    $tsInPath = Get-Command tailscale -ErrorAction SilentlyContinue
-    if ($tsInPath) { $tsPath = $tsInPath.Source }
-}
-
-if (Test-Path $tsPath) {
-    try {
-        $tsVersion = & $tsPath version 2>$null | Select-Object -First 1
-        Write-Ok "Tailscale already installed ($tsVersion)"
-    } catch {
-        Write-Ok "Tailscale already installed"
-    }
-} else {
-    Write-Host "  Installing Tailscale..." -ForegroundColor Yellow
-    winget install -e --id Tailscale.Tailscale --accept-source-agreements --accept-package-agreements | Out-Null
-    Write-Ok "Tailscale installed"
 }
 
 # Step 4: Clone repository
@@ -124,17 +124,22 @@ Write-Host "`n==========================================" -ForegroundColor Green
 Write-Host "  Installation Complete!" -ForegroundColor Green
 Write-Host "==========================================`n" -ForegroundColor Green
 
-Write-Host "Next steps:" -ForegroundColor White
+Write-Host "Starting setup wizard..." -ForegroundColor White
 Write-Host ""
-Write-Host "  1. Start Docker Desktop and wait for it to be ready" -ForegroundColor White
-Write-Host ""
-Write-Host "  2. Connect to Tailscale (if not already connected)" -ForegroundColor White
-Write-Host ""
-Write-Host "  3. Run the setup script:" -ForegroundColor White
-Write-Host "     cd $installDir" -ForegroundColor Yellow
-Write-Host "     ./go.sh" -ForegroundColor Yellow
-Write-Host ""
-Write-Host "  Note: If go.sh doesn't work on Windows, use:" -ForegroundColor Gray
-Write-Host "     bash go.sh  (if Git Bash is available)" -ForegroundColor Yellow
-Write-Host "     or run in WSL" -ForegroundColor Gray
-Write-Host ""
+
+Set-Location $installDir
+
+# Try to run go.sh with bash (Git Bash)
+$bashPath = "$env:ProgramFiles\Git\bin\bash.exe"
+if (-not (Test-Path $bashPath)) {
+    $bashPath = "${env:ProgramFiles(x86)}\Git\bin\bash.exe"
+}
+
+if (Test-Path $bashPath) {
+    Write-Host "Running setup with Git Bash..." -ForegroundColor Yellow
+    & $bashPath -c "./go.sh"
+} else {
+    Write-Warn "Git Bash not found. Please run manually:"
+    Write-Host "  cd $installDir" -ForegroundColor Yellow
+    Write-Host "  bash go.sh" -ForegroundColor Yellow
+}

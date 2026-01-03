@@ -45,8 +45,8 @@ const installCommands = {
 const dependencies: Record<OS, Dependency[]> = {
   windows: [
     { name: 'Git', url: 'https://git-scm.com/download/win' },
+    { name: 'Python', url: 'https://www.python.org/downloads/windows/' },
     { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/' },
-    { name: 'Tailscale', url: 'https://tailscale.com/download/windows' },
   ],
   mac: [
     { name: 'Git', url: 'https://git-scm.com/download/mac', note: 'or: brew install git' },
