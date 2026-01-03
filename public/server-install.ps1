@@ -63,19 +63,31 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 # Step 2: Install Python
 Write-Step 2 5 "Checking Python installation..."
 
-if (Get-Command python -ErrorAction SilentlyContinue) {
-    $pyVersion = python --version 2>$null
-    Write-Ok "Python already installed ($pyVersion)"
-} else {
+# Check if real Python is installed (not Windows Store alias)
+$pythonInstalled = $false
+try {
+    $pyVersion = python --version 2>&1
+    if ($LASTEXITCODE -eq 0 -and $pyVersion -match "Python \d") {
+        $pythonInstalled = $true
+        Write-Ok "Python already installed ($pyVersion)"
+    }
+} catch {}
+
+if (-not $pythonInstalled) {
     Write-Host "  Installing Python..." -ForegroundColor Yellow
     winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements | Out-Null
 
     # Refresh PATH
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-    if (Get-Command python -ErrorAction SilentlyContinue) {
-        Write-Ok "Python installed"
-    } else {
+    try {
+        $pyVersion = python --version 2>&1
+        if ($LASTEXITCODE -eq 0 -and $pyVersion -match "Python \d") {
+            Write-Ok "Python installed"
+        } else {
+            Write-Warn "Python installed but not in PATH. Please restart PowerShell after setup."
+        }
+    } catch {
         Write-Warn "Python installed but not in PATH. Please restart PowerShell after setup."
     }
 }
