@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import CopyButton from '@/components/CopyButton';
+import QuickInstall from '@/components/QuickInstall';
 
 const features = [
   {
@@ -124,16 +124,8 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Quick install */}
-            <div className="mt-12">
-              <p className="text-sm text-text-muted mb-3">Quick install</p>
-              <div className="inline-flex items-center gap-3 bg-surface-800 rounded-lg px-4 py-3 border border-surface-500/50">
-                <code className="text-sm text-primary-400 font-mono">
-                  git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh
-                </code>
-                <CopyButton text="git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh" />
-              </div>
-            </div>
+            {/* Quick install - OS aware */}
+            <QuickInstall />
           </div>
         </div>
       </div>
