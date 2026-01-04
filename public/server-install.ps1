@@ -3,9 +3,9 @@
 # =============================================================================
 # This script sets up a Ushadow server on Windows by:
 #   - Installing Git
-#   - Installing Python
 #   - Installing Docker Desktop
 #   - Cloning the Ushadow repository
+#   - Running setup via WSL
 #
 # Tailscale is configured later via the setup wizard.
 #
@@ -57,7 +57,7 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 }
 
 # Step 1: Install Git
-Write-Step 1 5 "Checking Git installation..."
+Write-Step 1 4 "Checking Git installation..."
 
 if (Get-Command git -ErrorAction SilentlyContinue) {
     $gitVersion = git --version 2>$null
@@ -75,62 +75,8 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
     }
 }
 
-# Step 2: Install Python
-Write-Step 2 5 "Checking Python installation..."
-
-# Check if real Python is installed (not Windows Store alias)
-$pythonInstalled = $false
-$pythonCmd = $null
-
-# Check common Python locations first
-$pythonPaths = @(
-    "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe",
-    "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe",
-    "$env:LOCALAPPDATA\Programs\Python\Python310\python.exe",
-    "$env:ProgramFiles\Python312\python.exe",
-    "$env:ProgramFiles\Python311\python.exe"
-)
-
-foreach ($pp in $pythonPaths) {
-    if (Test-Path $pp) {
-        $pythonCmd = $pp
-        break
-    }
-}
-
-if ($pythonCmd) {
-    $pyVersion = & $pythonCmd --version 2>&1
-    $pythonInstalled = $true
-    Write-Ok "Python already installed ($pyVersion)"
-} else {
-    # Try command in PATH
-    try {
-        $pyVersion = python --version 2>&1
-        if ($LASTEXITCODE -eq 0 -and $pyVersion -match "Python \d") {
-            $pythonInstalled = $true
-            Write-Ok "Python already installed ($pyVersion)"
-        }
-    } catch {}
-}
-
-if (-not $pythonInstalled) {
-    Write-Host "  Installing Python (this may take a few minutes)..." -ForegroundColor Yellow
-    winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
-
-    Refresh-Path
-
-    # Check if Python is now available
-    $pythonCmd = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
-    if (Test-Path $pythonCmd) {
-        $pyVersion = & $pythonCmd --version 2>&1
-        Write-Ok "Python installed ($pyVersion)"
-    } else {
-        Write-Warn "Python installed but may need a restart to be available."
-    }
-}
-
-# Step 3: Install Docker Desktop
-Write-Step 3 5 "Checking Docker installation..."
+# Step 2: Install Docker Desktop
+Write-Step 2 4 "Checking Docker installation..."
 
 if (Get-Command docker -ErrorAction SilentlyContinue) {
     $dockerVersion = docker --version 2>$null
@@ -142,8 +88,8 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     Write-Warn "You'll need to start Docker Desktop and complete initial setup."
 }
 
-# Step 4: Clone repository
-Write-Step 4 5 "Setting up Ushadow repository..."
+# Step 3: Clone repository
+Write-Step 3 4 "Setting up Ushadow repository..."
 
 Refresh-Path
 
@@ -168,8 +114,8 @@ if (Test-Path $installDir) {
     }
 }
 
-# Step 5: Setup instructions
-Write-Step 5 5 "Setup complete!"
+# Step 4: Setup complete
+Write-Step 4 4 "Setup complete!"
 
 Write-Host "`n==========================================" -ForegroundColor Green
 Write-Host "  Installation Complete!" -ForegroundColor Green
@@ -180,28 +126,30 @@ Write-Host ""
 
 Set-Location $installDir
 
-# Try to run go.sh with bash (Git Bash)
-$bashPath = "$env:ProgramFiles\Git\bin\bash.exe"
-if (-not (Test-Path $bashPath)) {
-    $bashPath = "${env:ProgramFiles(x86)}\Git\bin\bash.exe"
-}
+# Check for WSL
+$wslInstalled = $false
+try {
+    $wslCheck = wsl --status 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        $wslInstalled = $true
+    }
+} catch {}
 
-if (Test-Path $bashPath) {
-    Write-Host "Running setup with Git Bash..." -ForegroundColor Yellow
+if ($wslInstalled) {
+    Write-Host "Running setup with WSL..." -ForegroundColor Yellow
 
-    # Build PATH with Python location for Git Bash
-    $pythonDir = "$env:LOCALAPPDATA\Programs\Python\Python312"
-    $pythonScripts = "$env:LOCALAPPDATA\Programs\Python\Python312\Scripts"
-
-    # Convert Windows paths to Unix-style for Git Bash
-    $unixPythonDir = $pythonDir -replace '\\','/' -replace '^([A-Za-z]):','//$1'
-    $unixPythonScripts = $pythonScripts -replace '\\','/' -replace '^([A-Za-z]):','//$1'
-
-    # Run with PATH prepended (use double quotes and escape $ for bash PATH)
-    $bashCmd = "export PATH='" + $unixPythonDir + ":" + $unixPythonScripts + ":`$PATH'; ./go.sh"
-    & $bashPath -c $bashCmd
+    # Convert Windows path to WSL path
+    $wslPath = $installDir -replace '\\','/' -replace '^([A-Za-z]):','/mnt/$1'.ToLower()
+    wsl -e bash -c "cd '$wslPath' && ./go.sh"
 } else {
-    Write-Warn "Git Bash not found. Please run manually:"
-    Write-Host "  cd $installDir" -ForegroundColor Yellow
-    Write-Host "  bash go.sh" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Warn "WSL (Windows Subsystem for Linux) is required to run the setup."
+    Write-Host ""
+    Write-Host "  To install WSL, run this command in an Admin PowerShell:" -ForegroundColor White
+    Write-Host "    wsl --install" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  After installing WSL and restarting, run:" -ForegroundColor White
+    Write-Host "    cd $installDir" -ForegroundColor Yellow
+    Write-Host "    wsl ./go.sh" -ForegroundColor Yellow
+    Write-Host ""
 }

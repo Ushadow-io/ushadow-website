@@ -44,8 +44,7 @@ const installCommands = {
 
 const dependencies: Record<OS, Dependency[]> = {
   windows: [
-    { name: 'Git', url: 'https://git-scm.com/download/win' },
-    { name: 'Python', url: 'https://www.python.org/downloads/windows/' },
+    { name: 'WSL', url: 'https://learn.microsoft.com/en-us/windows/wsl/install', note: 'wsl --install' },
     { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/' },
   ],
   mac: [
