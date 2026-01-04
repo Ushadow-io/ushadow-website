@@ -5,17 +5,16 @@ const footerNavigation = {
   product: [
     { name: 'Features', href: '/features' },
     { name: 'Getting Started', href: '/docs' },
+    { name: 'Newsletter', href: '/newsletter' },
   ],
   resources: [
     { name: 'GitHub', href: 'https://github.com/Ushadow-io/Ushadow' },
     { name: 'Issues', href: 'https://github.com/Ushadow-io/Ushadow/issues' },
     { name: 'Discussions', href: 'https://github.com/Ushadow-io/Ushadow/discussions' },
   ],
-  features: [
-    { name: 'Orchestration', href: '/features#orchestration' },
-    { name: 'Recording', href: '/features#recording' },
-    { name: 'Secrets', href: '/features#secrets' },
-    { name: 'Add-ons', href: '/features#addons' },
+  legal: [
+    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Terms of Service', href: '/terms' },
   ],
 };
 
@@ -88,9 +87,9 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-text-primary">Features</h3>
+              <h3 className="text-sm font-semibold text-text-primary">Legal</h3>
               <ul role="list" className="mt-4 space-y-3">
-                {footerNavigation.features.map((item) => (
+                {footerNavigation.legal.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}

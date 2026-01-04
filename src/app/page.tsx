@@ -126,6 +126,32 @@ export default function Home() {
 
             {/* Quick install - OS aware */}
             <QuickInstall />
+
+            {/* Newsletter signup */}
+            <div className="mt-12 pt-8 border-t border-surface-500/30">
+              <p className="text-sm text-text-muted mb-4">Get updates on new features and releases</p>
+              <form
+                action="https://buttondown.com/api/emails/embed-subscribe/ushadow"
+                method="post"
+                target="popupwindow"
+                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+              >
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="you@example.com"
+                  className="flex-1 rounded-lg bg-surface-800 border border-surface-500/50 px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all"
+                />
+                <input type="hidden" name="embed" value="1" />
+                <button
+                  type="submit"
+                  className="rounded-lg px-5 py-2.5 text-sm font-semibold text-surface-900 bg-primary-400 hover:bg-primary-300 transition-colors whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
