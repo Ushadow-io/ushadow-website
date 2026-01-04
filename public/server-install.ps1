@@ -11,7 +11,7 @@
 #   iex (irm https://ushadow.io/server-install.ps1)
 # =============================================================================
 
-$Version = "1.0.3"
+$Version = "1.0.4"
 
 $ErrorActionPreference = "Continue"
 
@@ -123,7 +123,7 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     Write-Host ""
     Write-Host "  After Docker Desktop is running, re-run this script or run:" -ForegroundColor Yellow
     Write-Host "    cd $installDir" -ForegroundColor White
-    Write-Host "    .\go.ps1" -ForegroundColor White
+    Write-Host "    python setup/run.py --quick --prod --no-admin" -ForegroundColor White
     Write-Host ""
 }
 
@@ -182,6 +182,6 @@ if ($dockerRunning) {
     Write-Host "    3. Run these commands:" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "       cd $installDir" -ForegroundColor White
-    Write-Host "       .\go.ps1" -ForegroundColor White
+    Write-Host "       python setup/run.py --quick --prod --no-admin" -ForegroundColor White
     Write-Host ""
 }
