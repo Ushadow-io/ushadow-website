@@ -12,7 +12,7 @@
 #   iex (irm https://ushadow.io/server-install.ps1)
 # =============================================================================
 
-$Version = "1.0.1"
+$Version = "1.0.2"
 
 $ErrorActionPreference = "Continue"
 
@@ -76,8 +76,14 @@ if ($wslReady) {
     Write-Host "  Cloning and running setup in WSL..." -ForegroundColor Yellow
     Write-Host ""
 
-    # Clone (or update) and run setup in WSL
+    # Install git if needed, then clone (or update) and run setup in WSL
     wsl bash -c "
+        # Ensure git is installed
+        if ! command -v git &> /dev/null; then
+            echo 'Installing git...'
+            sudo apt-get update && sudo apt-get install -y git
+        fi
+
         if [ -d ~/ushadow ]; then
             echo 'Updating existing installation...'
             cd ~/ushadow && git pull
@@ -98,7 +104,7 @@ if ($wslReady) {
     Write-Host "    3. Open Ubuntu from Start Menu (create username/password)" -ForegroundColor White
     Write-Host "    4. In Ubuntu, run:" -ForegroundColor White
     Write-Host ""
-    Write-Host "       git clone $repoUrl ~/ushadow && cd ~/ushadow && ./go.sh" -ForegroundColor Yellow
+    Write-Host "       sudo apt install -y git && git clone $repoUrl ~/ushadow && cd ~/ushadow && ./go.sh" -ForegroundColor Yellow
     Write-Host ""
 }
 
