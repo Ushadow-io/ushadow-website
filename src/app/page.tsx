@@ -5,7 +5,7 @@ import QuickInstall from '@/components/QuickInstall';
 const features = [
   {
     name: 'Service Orchestration',
-    description: 'Deploy and manage services across Unodes using Docker and Kubernetes. Scale from local development to production clusters.',
+    description: 'Stateless configuration via YAML files following GitOps methodology. Deploy across Unodes with Docker or Kubernetes.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" />
@@ -15,7 +15,7 @@ const features = [
   },
   {
     name: 'Meeting & Conversation Recording',
-    description: 'Record meetings on the web and capture conversations on-the-go with Omi wearable integration. Build searchable memories automatically.',
+    description: 'Record meetings via Chronicle and capture conversations on-the-go with Omi wearable. Build searchable memories automatically.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
@@ -46,8 +46,8 @@ const features = [
 ];
 
 const stats = [
+  { label: 'Configuration', value: 'GitOps & YAML' },
   { label: 'Deployment', value: 'Docker & K8s' },
-  { label: 'Secrets', value: 'Encrypted' },
   { label: 'Open Source', value: 'Apache 2.0' },
   { label: 'Add-ons', value: 'Wizard Setup' },
 ];
@@ -99,8 +99,8 @@ export default function Home() {
 
             {/* Subheadline */}
             <p className="mt-6 text-lg leading-8 text-text-secondary max-w-2xl mx-auto">
-              Orchestrate services across Unodes with Docker and Kubernetes. Record meetings, capture conversations
-              with Omi, manage secrets securely, and extend with easy add-on wizards.
+              Orchestrate services across Unodes with Docker and Kubernetes. Record meetings via Chronicle, capture
+              conversations with Omi, manage secrets, and extend with easy add-on wizards.
             </p>
 
             {/* CTAs */}
@@ -203,39 +203,20 @@ export default function Home() {
             </p>
             <p className="mt-6 text-lg text-text-secondary">
               Deploy services across distributed Unodes. Each node runs Docker or Kubernetes
-              with shared secrets and centralized orchestration.
+              with centralized orchestration.
             </p>
           </div>
 
           {/* Architecture diagram */}
-          <div className="max-w-4xl mx-auto">
-            <div className="rounded-2xl bg-surface-800 border border-surface-500/30 p-8 font-mono text-sm overflow-x-auto">
-              <pre className="text-text-secondary whitespace-pre">
-{`┌─────────────────────────────────────────────────────┐
-│              Ushadow Dashboard                      │
-│   ┌───────────┬───────────┬───────────┬──────────┐  │
-│   │ Services  │ Recording │  Secrets  │ Add-ons  │  │
-│   └───────────┴───────────┴───────────┴──────────┘  │
-└───────────────────────┬─────────────────────────────┘
-                        │
-┌───────────────────────┴─────────────────────────────┐
-│              Orchestration Layer                    │
-│   ┌───────────────────┬─────────────────────────┐   │
-│   │  Secret Manager   │    Add-on Wizard        │   │
-│   │  (Keys & Creds)   │    (Service Setup)      │   │
-│   └───────────────────┴─────────────────────────┘   │
-└───────────────────────┬─────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-   ┌─────────┐    ┌─────────┐    ┌─────────┐
-   │ Unode 1 │    │ Unode 2 │    │ Unode N │
-   │(Docker) │    │  (K8s)  │    │  (K8s)  │
-   ├─────────┤    ├─────────┤    ├─────────┤
-   │Chronicle│    │   Omi   │    │ Custom  │
-   │Recorder │    │ Bridge  │    │ Service │
-   └─────────┘    └─────────┘    └─────────┘`}
-              </pre>
+          <div className="max-w-5xl mx-auto">
+            <div className="rounded-2xl overflow-hidden border border-surface-500/30">
+              <Image
+                src="/screenshots/cluster.png"
+                alt="Ushadow cluster architecture showing distributed Unodes"
+                width={1200}
+                height={800}
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>

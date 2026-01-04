@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -22,14 +23,15 @@ const coreFeatures = [
     status: 'Core',
     statusColor: 'primary',
     link: '/docs',
+    screenshot: '/screenshots/cluster.png',
   },
   {
     id: 'recording',
     name: 'Meeting & Conversation Recording',
-    tagline: 'Web Meetings + Omi Wearable',
-    description: 'Record meetings directly from your browser and capture conversations on-the-go with the Omi wearable necklace. All audio is transcribed and turned into searchable memories.',
+    tagline: 'Chronicle + Omi Wearable',
+    description: 'Record meetings directly from your browser using Chronicle and capture conversations on-the-go with the Omi wearable necklace. All audio is transcribed and turned into searchable memories.',
     features: [
-      'Browser-based meeting recording',
+      'Chronicle for browser-based meeting recording',
       'Omi necklace integration for mobile capture',
       'Real-time transcription with Deepgram/Whisper',
       'AI-powered memory extraction and tagging',
@@ -37,15 +39,17 @@ const coreFeatures = [
     ],
     status: 'Core',
     statusColor: 'accent',
-    link: 'https://www.omi.me',
+    link: 'https://github.com/chronicler-ai',
+    screenshot: '/screenshots/record.png',
+    badge: { text: 'Powered by Chronicle', href: 'https://github.com/chronicler-ai' },
   },
   {
     id: 'secrets',
     name: 'Secret & Key Management',
     tagline: 'Centralized Credential Security',
-    description: 'Securely share API keys, credentials, and secrets across all your containers and Unodes. Centralized management with encryption at rest and automatic rotation support.',
+    description: 'Securely share API keys, credentials, and secrets across all your containers and Unodes. Centralized management with automatic rotation support.',
     features: [
-      'Encrypted secret storage',
+      'Centralized secret storage',
       'Cross-container secret sharing',
       'API key management dashboard',
       'Automatic rotation policies',
@@ -54,6 +58,7 @@ const coreFeatures = [
     status: 'Core',
     statusColor: 'primary',
     link: '/docs#secrets',
+    screenshot: '/screenshots/keys.png',
   },
   {
     id: 'addons',
@@ -70,6 +75,7 @@ const coreFeatures = [
     status: 'Core',
     statusColor: 'accent',
     link: '/docs#addons',
+    screenshot: '/screenshots/wizard.png',
   },
 ];
 
@@ -157,6 +163,19 @@ export default function FeaturesPage() {
                       </span>
                     </div>
                     <p className="text-primary-400 font-medium mb-4">{coreFeature.tagline}</p>
+                    {'badge' in coreFeature && coreFeature.badge && (
+                      <a
+                        href={coreFeature.badge.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent-500/10 text-accent-400 border border-accent-500/20 hover:bg-accent-500/20 transition-colors mb-4"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                        </svg>
+                        {coreFeature.badge.text}
+                      </a>
+                    )}
                     <p className="text-text-secondary mb-6">{coreFeature.description}</p>
 
                     <ul className="space-y-3 mb-8">
@@ -197,41 +216,53 @@ export default function FeaturesPage() {
 
                   {/* Visual */}
                   <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                    <div
-                      className="rounded-2xl p-8 border"
-                      style={{
-                        backgroundColor: 'var(--surface-800)',
-                        borderColor: coreFeature.statusColor === 'primary'
-                          ? 'rgba(74, 222, 128, 0.2)'
-                          : coreFeature.statusColor === 'accent'
-                          ? 'rgba(168, 85, 247, 0.2)'
-                          : 'var(--surface-500)',
-                        backgroundImage: coreFeature.statusColor === 'primary'
-                          ? 'radial-gradient(ellipse at center, rgba(74, 222, 128, 0.05) 0%, transparent 70%)'
-                          : coreFeature.statusColor === 'accent'
-                          ? 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.05) 0%, transparent 70%)'
-                          : 'none',
-                      }}
-                    >
-                      <div className="aspect-video flex items-center justify-center">
-                        <div className="text-center">
-                          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 ${
-                            coreFeature.statusColor === 'primary'
-                              ? 'bg-primary-400/20 text-primary-400'
-                              : coreFeature.statusColor === 'accent'
-                              ? 'bg-accent-500/20 text-accent-400'
-                              : 'bg-surface-600 text-text-muted'
-                          }`}>
-                            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                            </svg>
+                    {'screenshot' in coreFeature && coreFeature.screenshot ? (
+                      <div className="rounded-2xl overflow-hidden border border-surface-500/30">
+                        <Image
+                          src={coreFeature.screenshot}
+                          alt={coreFeature.name}
+                          width={800}
+                          height={500}
+                          className="w-full h-auto"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="rounded-2xl p-8 border"
+                        style={{
+                          backgroundColor: 'var(--surface-800)',
+                          borderColor: coreFeature.statusColor === 'primary'
+                            ? 'rgba(74, 222, 128, 0.2)'
+                            : coreFeature.statusColor === 'accent'
+                            ? 'rgba(168, 85, 247, 0.2)'
+                            : 'var(--surface-500)',
+                          backgroundImage: coreFeature.statusColor === 'primary'
+                            ? 'radial-gradient(ellipse at center, rgba(74, 222, 128, 0.05) 0%, transparent 70%)'
+                            : coreFeature.statusColor === 'accent'
+                            ? 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.05) 0%, transparent 70%)'
+                            : 'none',
+                        }}
+                      >
+                        <div className="aspect-video flex items-center justify-center">
+                          <div className="text-center">
+                            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 ${
+                              coreFeature.statusColor === 'primary'
+                                ? 'bg-primary-400/20 text-primary-400'
+                                : coreFeature.statusColor === 'accent'
+                                ? 'bg-accent-500/20 text-accent-400'
+                                : 'bg-surface-600 text-text-muted'
+                            }`}>
+                              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                              </svg>
+                            </div>
+                            <p className="text-text-muted text-sm">
+                              {coreFeature.name}
+                            </p>
                           </div>
-                          <p className="text-text-muted text-sm">
-                            {coreFeature.name}
-                          </p>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
