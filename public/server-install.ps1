@@ -11,7 +11,7 @@
 #   iex (irm https://ushadow.io/server-install.ps1)
 # =============================================================================
 
-$Version = "1.0.5"
+$Version = "1.0.6"
 
 $ErrorActionPreference = "Continue"
 
@@ -124,12 +124,7 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     Write-Host "  Installing Docker Desktop (this may take several minutes)..." -ForegroundColor Yellow
     winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements
     Write-Ok "Docker Desktop installed"
-    Write-Warn "You'll need to start Docker Desktop and complete initial setup."
-    Write-Host ""
-    Write-Host "  After Docker Desktop is running, re-run this script or run:" -ForegroundColor Yellow
-    Write-Host "    cd $installDir" -ForegroundColor White
-    Write-Host "    python setup/run.py --quick --prod --no-admin" -ForegroundColor White
-    Write-Host ""
+    Write-Warn "Docker Desktop installed - will attempt to start it automatically."
 }
 
 # Step 4: Clone repository
@@ -171,22 +166,51 @@ try {
     }
 } catch {}
 
+if (-not $dockerRunning) {
+    Write-Host ""
+    Write-Host "  Starting Docker Desktop..." -ForegroundColor Yellow
+
+    # Try to start Docker Desktop
+    $dockerPath = "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
+    if (Test-Path $dockerPath) {
+        Start-Process $dockerPath
+        Write-Host "  Waiting for Docker to start (this may take 30-60 seconds)..." -ForegroundColor Yellow
+
+        # Wait up to 90 seconds for Docker to be ready
+        $timeout = 90
+        $elapsed = 0
+        while ($elapsed -lt $timeout) {
+            Start-Sleep -Seconds 5
+            $elapsed += 5
+            try {
+                $dockerInfo = docker info 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    $dockerRunning = $true
+                    Write-Ok "Docker Desktop is running"
+                    break
+                }
+            } catch {}
+            Write-Host "    Still waiting... ($elapsed seconds)" -ForegroundColor Gray
+        }
+    }
+}
+
 if ($dockerRunning) {
+    Write-Host ""
     Write-Host "Starting Ushadow setup..." -ForegroundColor Cyan
     Write-Host ""
 
     Set-Location $installDir
-    & python setup/run.py --quick --prod --no-admin
+    & python setup/run.py --quick --prod --skip-admin
 } else {
     Write-Host ""
-    Write-Warn "Docker Desktop is not running."
+    Write-Warn "Docker Desktop is not running yet."
     Write-Host ""
-    Write-Host "  Next steps:" -ForegroundColor White
-    Write-Host "    1. Start Docker Desktop from the Start Menu" -ForegroundColor Yellow
-    Write-Host "    2. Wait for Docker to fully start (whale icon stops animating)" -ForegroundColor Yellow
-    Write-Host "    3. Run these commands:" -ForegroundColor Yellow
+    Write-Host "  Docker Desktop may still be starting. Next steps:" -ForegroundColor White
+    Write-Host "    1. Wait for Docker Desktop to fully start (whale icon in system tray stops animating)" -ForegroundColor Yellow
+    Write-Host "    2. Run these commands:" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "       cd $installDir" -ForegroundColor White
-    Write-Host "       python setup/run.py --quick --prod --no-admin" -ForegroundColor White
+    Write-Host "       python setup/run.py --quick --prod --skip-admin" -ForegroundColor White
     Write-Host ""
 }
