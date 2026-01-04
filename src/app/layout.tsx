@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ushadow.io"),
   title: "Ushadow - AI Orchestration Platform",
   description: "Service orchestration with Unodes, meeting recording, secret management, and easy add-on wizards. Deploy with Docker or Kubernetes.",
   keywords: ["AI", "orchestration", "Unodes", "Docker", "Kubernetes", "secrets", "recording", "Omi", "wearable"],
@@ -26,10 +27,10 @@ export const metadata: Metadata = {
     siteName: "Ushadow",
     images: [
       {
-        url: "/logo/android-chrome-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "Ushadow Logo",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ushadow - AI Orchestration Platform",
       },
     ],
     locale: "en_US",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ushadow - AI Orchestration Platform",
     description: "Service orchestration, meeting recording, secrets, and easy add-ons.",
-    images: ["/logo/android-chrome-512x512.png"],
+    images: ["/og-image.png"],
   },
   icons: {
     icon: [
