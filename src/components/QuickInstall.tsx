@@ -30,32 +30,33 @@ const installCommands = {
   },
   mac: {
     label: 'Terminal',
-    command: 'git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh',
+    command: 'curl -fsSL https://ushadow.io/server-install.sh | bash',
   },
   linux: {
     label: 'Terminal',
-    command: 'git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh',
+    command: 'curl -fsSL https://ushadow.io/server-install.sh | bash',
   },
   unknown: {
     label: 'Terminal',
-    command: 'git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh',
+    command: 'curl -fsSL https://ushadow.io/server-install.sh | bash',
   },
 };
 
 const dependencies: Record<OS, Dependency[]> = {
   windows: [
-    { name: 'WSL', url: 'https://learn.microsoft.com/en-us/windows/wsl/install', note: 'wsl --install' },
-    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/' },
+    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/', note: 'installed automatically' },
+    { name: 'Git', url: 'https://git-scm.com/download/win', note: 'installed automatically' },
+    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
   ],
   mac: [
-    { name: 'Git', url: 'https://git-scm.com/download/mac', note: 'or: brew install git' },
-    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/mac-install/' },
-    { name: 'Tailscale', url: 'https://tailscale.com/download/mac' },
+    { name: 'Git', url: 'https://git-scm.com/download/mac', note: 'installed automatically' },
+    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/mac-install/', note: 'installed automatically' },
+    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
   ],
   linux: [
-    { name: 'Git', url: 'https://git-scm.com/download/linux', note: 'apt install git' },
-    { name: 'Docker', url: 'https://docs.docker.com/engine/install/', note: 'curl -fsSL https://get.docker.com | sh' },
-    { name: 'Tailscale', url: 'https://tailscale.com/download/linux', note: 'curl -fsSL https://tailscale.com/install.sh | sh' },
+    { name: 'Git', url: 'https://git-scm.com/download/linux', note: 'installed automatically' },
+    { name: 'Docker', url: 'https://docs.docker.com/engine/install/', note: 'installed automatically' },
+    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
   ],
   unknown: [
     { name: 'Git', url: 'https://git-scm.com/downloads' },
