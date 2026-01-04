@@ -131,7 +131,7 @@ export default function Home() {
             <div className="mt-12 pt-8 border-t border-surface-500/30">
               <p className="text-sm text-text-muted mb-4">Get updates on new features and releases</p>
               <form
-                action="https://buttondown.com/api/emails/embed-subscribe/ushadow"
+                action="https://buttondown.com/api/emails/embed-subscribe/thestumonkey"
                 method="post"
                 target="popupwindow"
                 className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"

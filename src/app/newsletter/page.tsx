@@ -22,7 +22,7 @@ export default function Newsletter() {
 
         <div className="rounded-2xl bg-surface-800 border border-surface-500/30 p-8">
           <form
-            action="https://buttondown.com/api/emails/embed-subscribe/ushadow"
+            action="https://buttondown.com/api/emails/embed-subscribe/thestumonkey"
             method="post"
             target="popupwindow"
             className="space-y-6"
