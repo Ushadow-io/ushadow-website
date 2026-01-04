@@ -106,7 +106,8 @@ if (Test-Path $installDir) {
 } else {
     Write-Host "  Cloning repository to $installDir..." -ForegroundColor Yellow
     try {
-        git clone $repoUrl $installDir
+        # Clone with LF line endings (not CRLF) so scripts work in WSL
+        git clone -c core.autocrlf=false $repoUrl $installDir
         Write-Ok "Repository cloned"
     } catch {
         Write-Err "Failed to clone repository"
@@ -135,21 +136,24 @@ try {
     }
 } catch {}
 
-if ($wslInstalled) {
-    Write-Host "Running setup with WSL..." -ForegroundColor Yellow
+# Convert Windows path to WSL path (C:\Users\... -> /mnt/c/Users/...)
+$drive = $installDir.Substring(0,1).ToLower()
+$rest = $installDir.Substring(2) -replace '\\','/'
+$wslPath = "/mnt/$drive$rest"
 
-    # Convert Windows path to WSL path
-    $wslPath = $installDir -replace '\\','/' -replace '^([A-Za-z]):','/mnt/$1'.ToLower()
-    wsl -e bash -c "cd '$wslPath' && ./go.sh"
+if ($wslInstalled) {
+    Write-Host ""
+    Write-Host "Running setup in WSL..." -ForegroundColor Yellow
+
+    # Use bash -c to run commands in WSL (per Microsoft docs)
+    wsl bash -c "cd '$wslPath' && ./go.sh"
 } else {
     Write-Host ""
-    Write-Warn "WSL (Windows Subsystem for Linux) is required to run the setup."
+    Write-Warn "WSL (Windows Subsystem for Linux) is required."
     Write-Host ""
-    Write-Host "  To install WSL, run this command in an Admin PowerShell:" -ForegroundColor White
-    Write-Host "    wsl --install" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "  After installing WSL and restarting, run:" -ForegroundColor White
-    Write-Host "    cd $installDir" -ForegroundColor Yellow
-    Write-Host "    wsl ./go.sh" -ForegroundColor Yellow
+    Write-Host "  1. Install WSL:  wsl --install" -ForegroundColor White
+    Write-Host "  2. Restart your computer" -ForegroundColor White
+    Write-Host "  3. Open Ubuntu and run:" -ForegroundColor White
+    Write-Host "     cd $wslPath && ./go.sh" -ForegroundColor Yellow
     Write-Host ""
 }
