@@ -281,8 +281,17 @@ main() {
     echo "  Docker:       $(docker --version 2>/dev/null | cut -d' ' -f3 | cut -d',' -f1 || echo 'not running')"
     echo ""
 
-    # Interactive setup dialog
-    setup_dialog
+    # If JOIN_URL is set, auto-join the cluster
+    if [ -n "$JOIN_URL" ]; then
+        echo "=========================================="
+        echo "  Joining Ushadow Cluster..."
+        echo "=========================================="
+        echo ""
+        curl -fsSL "$JOIN_URL" | sh
+    else
+        # Interactive setup dialog
+        setup_dialog
+    fi
 }
 
 # Interactive dialog for next steps

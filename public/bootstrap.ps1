@@ -212,14 +212,28 @@ Write-Host "`n==========================================" -ForegroundColor Green
 Write-Host "  Bootstrap Complete!" -ForegroundColor Green
 Write-Host "==========================================`n" -ForegroundColor Green
 
-Write-Host "This machine is now ready to join a Ushadow cluster.`n" -ForegroundColor White
-Write-Host "Next steps:" -ForegroundColor White
-Write-Host "  1. Go to your Ushadow dashboard" -ForegroundColor White
-Write-Host "  2. Navigate to Cluster > Generate Join Token" -ForegroundColor White
-Write-Host "  3. Copy the join command and run it on this machine`n" -ForegroundColor White
-
 Write-Host "System Info:" -ForegroundColor Cyan
 Write-Host "  Hostname:     $env:COMPUTERNAME" -ForegroundColor White
 Write-Host "  Tailscale IP: $tsIP" -ForegroundColor White
 $dockerVer = docker --version 2>$null
 Write-Host "  Docker:       $dockerVer`n" -ForegroundColor White
+
+# Check if JOIN_URL was provided - if so, execute the join script
+if ($env:JOIN_URL) {
+    Write-Host "==========================================" -ForegroundColor Cyan
+    Write-Host "  Joining Ushadow Cluster..." -ForegroundColor Cyan
+    Write-Host "==========================================`n" -ForegroundColor Cyan
+
+    try {
+        iex (irm $env:JOIN_URL)
+    } catch {
+        Write-Err "Failed to execute join script: $_"
+        exit 1
+    }
+} else {
+    Write-Host "This machine is now ready to join a Ushadow cluster.`n" -ForegroundColor White
+    Write-Host "Next steps:" -ForegroundColor White
+    Write-Host "  1. Go to your Ushadow dashboard" -ForegroundColor White
+    Write-Host "  2. Navigate to Cluster > Generate Join Token" -ForegroundColor White
+    Write-Host "  3. Copy the join command and run it on this machine`n" -ForegroundColor White
+}
