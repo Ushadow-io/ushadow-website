@@ -127,12 +127,12 @@ Write-Host ""
 
 Set-Location $installDir
 
-# Check for WSL
-$wslInstalled = $false
+# Check for WSL with a distro installed
+$wslReady = $false
 try {
-    $wslCheck = wsl --status 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        $wslInstalled = $true
+    $distros = wsl -l -q 2>&1
+    if ($LASTEXITCODE -eq 0 -and $distros -and $distros.Length -gt 0) {
+        $wslReady = $true
     }
 } catch {}
 
@@ -141,7 +141,7 @@ $drive = $installDir.Substring(0,1).ToLower()
 $rest = $installDir.Substring(2) -replace '\\','/'
 $wslPath = "/mnt/$drive$rest"
 
-if ($wslInstalled) {
+if ($wslReady) {
     Write-Host ""
     Write-Host "Running setup in WSL..." -ForegroundColor Yellow
 
