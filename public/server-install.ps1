@@ -11,7 +11,7 @@
 #   iex (irm https://ushadow.io/server-install.ps1)
 # =============================================================================
 
-$Version = "1.0.4"
+$Version = "1.0.5"
 
 $ErrorActionPreference = "Continue"
 
@@ -108,6 +108,11 @@ if (-not $pythonOk) {
         Write-Warn "Python installed but not in PATH. You may need to restart PowerShell."
     }
 }
+
+# Install required Python packages
+Write-Host "  Installing Python dependencies..." -ForegroundColor Yellow
+python -m pip install --quiet pyyaml 2>$null
+Write-Ok "Python dependencies installed"
 
 # Step 3: Install Docker Desktop
 Write-Step 3 4 "Checking Docker installation..."
