@@ -13,6 +13,8 @@
 #   iex (irm https://ushadow.io/server-install.ps1)
 # =============================================================================
 
+$Version = "1.0.0"
+
 $ErrorActionPreference = "Continue"
 
 function Write-Step { param($num, $total, $msg) Write-Host "`n[$num/$total] $msg" -ForegroundColor Cyan }
@@ -40,7 +42,7 @@ $repoUrl = "https://github.com/Ushadow-io/Ushadow.git"
 $installDir = "$env:USERPROFILE\ushadow"
 
 Write-Host "`n==========================================" -ForegroundColor Cyan
-Write-Host "  Ushadow Server Install (Windows)" -ForegroundColor Cyan
+Write-Host "  Ushadow Server Install (Windows) v$Version" -ForegroundColor Cyan
 Write-Host "==========================================`n" -ForegroundColor Cyan
 
 # Check if running as admin
