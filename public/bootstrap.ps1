@@ -166,27 +166,42 @@ $dockerRunning = $false
 $dockerCmd = Get-Command docker -ErrorAction SilentlyContinue
 
 if ($dockerCmd) {
-    for ($i = 0; $i -lt 10; $i++) {
-        try {
-            $result = & docker info 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                $dockerRunning = $true
-                break
-            }
-        } catch {
-            # Ignore errors
+    # Quick check if already running
+    try {
+        $result = & docker info 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            $dockerRunning = $true
         }
+    } catch {}
+}
 
-        if ($i -eq 0) {
-            Write-Host "  Waiting for Docker to start..." -ForegroundColor Gray
+if (-not $dockerRunning) {
+    # Try to start Docker Desktop
+    $dockerPath = "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
+    if (Test-Path $dockerPath) {
+        Write-Host "  Starting Docker Desktop..." -ForegroundColor Yellow
+        Start-Process $dockerPath
+        Write-Host "  Waiting for Docker to start (this may take 30-60 seconds)..." -ForegroundColor Yellow
+
+        # Wait up to 90 seconds
+        for ($i = 0; $i -lt 18; $i++) {
+            Start-Sleep -Seconds 5
+            try {
+                $result = & docker info 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    $dockerRunning = $true
+                    break
+                }
+            } catch {}
+            Write-Host "    Still waiting... ($($i * 5 + 5) seconds)" -ForegroundColor Gray
         }
-        Start-Sleep -Seconds 2
     }
 }
 
 if (-not $dockerRunning) {
-    Write-Warn "Docker not running. Please start Docker Desktop."
-    Write-Host "  After Docker starts, run the join command from your Ushadow dashboard.`n" -ForegroundColor White
+    Write-Warn "Docker not running yet. It may still be starting."
+    Write-Host "  Wait for Docker Desktop to fully start (whale icon stops animating)," -ForegroundColor White
+    Write-Host "  then run the join command from your Ushadow dashboard.`n" -ForegroundColor White
     exit 0
 }
 

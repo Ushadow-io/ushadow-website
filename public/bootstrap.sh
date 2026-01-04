@@ -127,7 +127,17 @@ install_docker() {
         macos)
             if command -v brew &> /dev/null; then
                 brew install --cask docker
-                log_warn "Docker Desktop installed. Please start Docker Desktop manually."
+                log_info "Starting Docker Desktop..."
+                open -a Docker
+                log_info "Waiting for Docker to start (this may take 30-60 seconds)..."
+                for i in {1..18}; do
+                    if docker info &>/dev/null; then
+                        log_success "Docker is running"
+                        break
+                    fi
+                    echo "    Still waiting... ($((i * 5)) seconds)"
+                    sleep 5
+                done
             else
                 log_error "Please install Docker Desktop from https://docker.com/products/docker-desktop"
                 exit 1
