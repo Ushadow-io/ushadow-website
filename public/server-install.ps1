@@ -188,7 +188,19 @@ if (-not (Test-Path $bashPath)) {
 
 if (Test-Path $bashPath) {
     Write-Host "Running setup with Git Bash..." -ForegroundColor Yellow
-    & $bashPath -c "./go.sh"
+
+    # Build PATH with Python location for Git Bash
+    $pythonDir = "$env:LOCALAPPDATA\Programs\Python\Python312"
+    $pythonScripts = "$env:LOCALAPPDATA\Programs\Python\Python312\Scripts"
+    $gitBin = "$env:ProgramFiles\Git\bin"
+
+    # Convert Windows paths to Unix-style for Git Bash
+    $unixPythonDir = $pythonDir -replace '\\','/' -replace '^([A-Za-z]):','/$1'
+    $unixPythonScripts = $pythonScripts -replace '\\','/' -replace '^([A-Za-z]):','/$1'
+
+    # Run with PATH prepended
+    $env:PATH = "$pythonDir;$pythonScripts;$env:PATH"
+    & $bashPath -c "export PATH='$unixPythonDir:$unixPythonScripts:$PATH'; ./go.sh"
 } else {
     Write-Warn "Git Bash not found. Please run manually:"
     Write-Host "  cd $installDir" -ForegroundColor Yellow
