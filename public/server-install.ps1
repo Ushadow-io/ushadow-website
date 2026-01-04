@@ -192,15 +192,14 @@ if (Test-Path $bashPath) {
     # Build PATH with Python location for Git Bash
     $pythonDir = "$env:LOCALAPPDATA\Programs\Python\Python312"
     $pythonScripts = "$env:LOCALAPPDATA\Programs\Python\Python312\Scripts"
-    $gitBin = "$env:ProgramFiles\Git\bin"
 
     # Convert Windows paths to Unix-style for Git Bash
-    $unixPythonDir = $pythonDir -replace '\\','/' -replace '^([A-Za-z]):','/$1'
-    $unixPythonScripts = $pythonScripts -replace '\\','/' -replace '^([A-Za-z]):','/$1'
+    $unixPythonDir = $pythonDir -replace '\\','/' -replace '^([A-Za-z]):','//$1'
+    $unixPythonScripts = $pythonScripts -replace '\\','/' -replace '^([A-Za-z]):','//$1'
 
-    # Run with PATH prepended
-    $env:PATH = "$pythonDir;$pythonScripts;$env:PATH"
-    & $bashPath -c "export PATH='$unixPythonDir:$unixPythonScripts:$PATH'; ./go.sh"
+    # Run with PATH prepended (use double quotes and escape $ for bash PATH)
+    $bashCmd = "export PATH='" + $unixPythonDir + ":" + $unixPythonScripts + ":`$PATH'; ./go.sh"
+    & $bashPath -c $bashCmd
 } else {
     Write-Warn "Git Bash not found. Please run manually:"
     Write-Host "  cd $installDir" -ForegroundColor Yellow
