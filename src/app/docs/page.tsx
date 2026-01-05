@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import QuickInstall from '@/components/QuickInstall';
 
 export const metadata: Metadata = {
   title: 'Getting Started - Ushadow',
@@ -82,6 +83,9 @@ export default function DocsPage() {
             <p className="mt-6 text-lg text-text-secondary">
               Get Ushadow up and running in minutes with our quickstart guide.
             </p>
+            <div className="mt-8">
+              <QuickInstall />
+            </div>
           </div>
         </div>
       </div>

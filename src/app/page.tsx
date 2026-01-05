@@ -63,7 +63,7 @@ export default function Home() {
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
+        <div className="mx-auto max-w-7xl px-6 py-8 sm:py-10 lg:px-8 lg:py-12">
           <div className="mx-auto max-w-4xl text-center">
             {/* Powered by Chronicle badge */}
             <a
