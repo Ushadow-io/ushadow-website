@@ -1,0 +1,9 @@
+# Redirect install scripts to GitHub raw URLs
+/bootstrap.sh https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/unode-bootstrap.sh 302
+/server-install.sh https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/server-install.sh 302
+/server-install.ps1 https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/server-install.ps1 302
+/bootstrap.ps1 https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/unode-bootstrap.ps1 302
+
+# Alternative paths
+/install.sh https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/unode-bootstrap.sh 302
+/go.sh https://raw.githubusercontent.com/Ushadow-io/Ushadow/main/scripts/unode-bootstrap.sh 302
