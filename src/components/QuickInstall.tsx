@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import CopyButton from './CopyButton';
 
 type OS = 'windows' | 'mac' | 'linux' | 'unknown';
+type InstallMethod = 'installer' | 'script';
 
-interface Dependency {
-  name: string;
-  url: string;
-  note?: string;
+interface InstructionStep {
+  text: string;
+  icon?: boolean;
 }
 
 function detectOS(): OS {
@@ -29,7 +29,55 @@ const CopyIcon = () => (
   </svg>
 );
 
-const installCommands = {
+const DownloadIcon = () => (
+  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+  </svg>
+);
+
+const RELEASES_URL = 'https://github.com/Ushadow-io/Ushadow/releases/latest';
+
+const installerConfig: Record<OS, { label: string; fileName: string; instructions: InstructionStep[] }> = {
+  windows: {
+    label: 'Windows Installer (.msi)',
+    fileName: 'Ushadow_x64_en-US.msi',
+    instructions: [
+      { text: 'Download and run the .msi file' },
+      { text: 'If SmartScreen appears, click "More info"' },
+      { text: 'Then click "Run anyway"' },
+      { text: 'Follow the installation wizard' },
+    ],
+  },
+  mac: {
+    label: 'macOS Installer (.dmg)',
+    fileName: 'Ushadow.dmg',
+    instructions: [
+      { text: 'Download and open the .dmg file' },
+      { text: 'Drag Ushadow to Applications' },
+      { text: 'Right-click the app, select "Open"' },
+      { text: 'Click "Open" in the dialog to bypass Gatekeeper' },
+    ],
+  },
+  linux: {
+    label: 'Linux (.deb / .AppImage)',
+    fileName: 'Ushadow.deb',
+    instructions: [
+      { text: 'Download the .deb or .AppImage' },
+      { text: 'For .deb: sudo dpkg -i Ushadow.deb' },
+      { text: 'For .AppImage: chmod +x && run' },
+    ],
+  },
+  unknown: {
+    label: 'Download Installer',
+    fileName: '',
+    instructions: [
+      { text: 'Download the installer for your OS' },
+      { text: 'Follow the installation prompts' },
+    ],
+  },
+};
+
+const scriptConfig: Record<OS, { label: string; command: string; instructions: InstructionStep[] }> = {
   windows: {
     label: 'PowerShell (Run as Admin)',
     command: 'iex (irm https://ushadow.io/server-install.ps1)',
@@ -71,110 +119,103 @@ const installCommands = {
   },
 };
 
-const dependencies: Record<OS, Dependency[]> = {
-  windows: [
-    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/windows-install/', note: 'installed automatically' },
-    { name: 'Git', url: 'https://git-scm.com/download/win', note: 'installed automatically' },
-    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
-  ],
-  mac: [
-    { name: 'Git', url: 'https://git-scm.com/download/mac', note: 'installed automatically' },
-    { name: 'Docker Desktop', url: 'https://docs.docker.com/desktop/install/mac-install/', note: 'installed automatically' },
-    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
-  ],
-  linux: [
-    { name: 'Git', url: 'https://git-scm.com/download/linux', note: 'installed automatically' },
-    { name: 'Docker', url: 'https://docs.docker.com/engine/install/', note: 'installed automatically' },
-    { name: 'Python', url: 'https://python.org/downloads/', note: 'installed automatically' },
-  ],
-  unknown: [
-    { name: 'Git', url: 'https://git-scm.com/downloads' },
-    { name: 'Docker', url: 'https://docs.docker.com/get-docker/' },
-    { name: 'Tailscale', url: 'https://tailscale.com/download' },
-  ],
-};
-
 export default function QuickInstall() {
   const [os, setOS] = useState<OS>('unknown');
-  const [showManual, setShowManual] = useState(false);
+  const [method, setMethod] = useState<InstallMethod>('installer');
 
   useEffect(() => {
     setOS(detectOS());
   }, []);
 
-  const currentInstall = installCommands[os];
-  const currentDeps = dependencies[os];
+  const installer = installerConfig[os];
+  const script = scriptConfig[os];
+  const currentInstructions = method === 'installer' ? installer.instructions : script.instructions;
 
   return (
     <div className="mt-12">
       <p className="text-sm text-text-muted mb-3">Quick install</p>
 
-      {/* Primary install command */}
-      <div className="inline-flex flex-col items-center gap-3">
+      <div className="inline-flex items-stretch gap-0">
+        {/* Method toggle - vertical */}
+        <div className="flex flex-col rounded-l-lg bg-surface-800 border border-r-0 border-surface-500/50">
+          <button
+            onClick={() => setMethod('installer')}
+            className={`px-4 py-3 text-sm transition-colors rounded-tl-lg ${
+              method === 'installer'
+                ? 'bg-primary-500 text-white'
+                : 'text-text-muted hover:text-text-secondary hover:bg-surface-700'
+            }`}
+          >
+            Installer
+          </button>
+          <button
+            onClick={() => setMethod('script')}
+            className={`px-4 py-3 text-sm transition-colors rounded-bl-lg ${
+              method === 'script'
+                ? 'bg-primary-500 text-white'
+                : 'text-text-muted hover:text-text-secondary hover:bg-surface-700'
+            }`}
+          >
+            Script
+          </button>
+        </div>
+
+        {/* Install content - fixed width */}
         <div className="relative">
-          <div className="inline-flex items-center gap-3 bg-surface-800 rounded-lg px-4 py-3 border border-surface-500/50">
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-text-muted">{currentInstall.label}</span>
-              <code className="text-sm text-primary-400 font-mono">
-                {currentInstall.command}
-              </code>
-            </div>
-            <CopyButton text={currentInstall.command} />
+          <div className="w-[420px] h-full bg-surface-800 rounded-r-lg px-4 py-3 border border-surface-500/50 flex items-center">
+            {method === 'installer' ? (
+              /* Installer download button */
+              <a
+                href={RELEASES_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 w-full hover:opacity-80 transition-opacity"
+              >
+                <div className="flex flex-col gap-1 flex-1">
+                  <span className="text-xs text-text-muted">{installer.label}</span>
+                  <span className="text-sm text-primary-400 font-medium">
+                    Download from GitHub Releases
+                  </span>
+                </div>
+                <div className="flex-shrink-0 p-2 rounded-md bg-primary-500 text-white">
+                  <DownloadIcon />
+                </div>
+              </a>
+            ) : (
+              /* Script command */
+              <div className="flex items-center gap-3 w-full">
+                <div className="flex flex-col gap-1 flex-1">
+                  <span className="text-xs text-text-muted">{script.label}</span>
+                  <code className="text-sm text-primary-400 font-mono">
+                    {script.command}
+                  </code>
+                </div>
+                <CopyButton text={script.command} />
+              </div>
+            )}
           </div>
 
           {/* Instructions bubble - positioned to the right */}
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-purple-950/40 rounded-lg px-3 py-2 w-[280px] border border-purple-500/30">
             <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-purple-950/40 border-l border-b border-purple-500/30 rotate-45" />
             <ol className="text-xs text-text-secondary space-y-1">
-              {currentInstall.instructions.map((step, i) => (
+              {currentInstructions.map((step, i) => (
                 <li key={i} className="flex gap-2">
                   <span className="text-purple-400 font-medium">{i + 1}.</span>
-                  <span>{step.text}{'icon' in step && step.icon && <> <CopyIcon /></>}</span>
+                  <span>{step.text}{step.icon && <> <CopyIcon /></>}</span>
                 </li>
               ))}
             </ol>
+            {method === 'installer' && (
+              <a
+                href="/docs/unsigned-apps"
+                className="block mt-2 pt-2 border-t border-purple-500/20 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+              >
+                Having trouble opening the app?
+              </a>
+            )}
           </div>
         </div>
-
-        {/* Manual install toggle */}
-        <button
-          onClick={() => setShowManual(!showManual)}
-          className="text-xs text-text-muted hover:text-text-secondary transition-colors"
-        >
-          {showManual ? 'Hide' : 'Prefer manual install?'}
-        </button>
-
-        {/* Manual install dependencies */}
-        {showManual && (
-          <div className="bg-surface-800/50 rounded-lg px-6 py-4 border border-surface-500/30 text-left max-w-md">
-            <p className="text-xs text-text-muted mb-3">Install these dependencies first:</p>
-            <ul className="space-y-2">
-              {currentDeps.map((dep) => (
-                <li key={dep.name} className="flex items-center gap-2 text-sm">
-                  <span className="text-primary-400">•</span>
-                  <a
-                    href={dep.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-400 hover:text-primary-300 underline"
-                  >
-                    {dep.name}
-                  </a>
-                  {dep.note && (
-                    <span className="text-text-muted text-xs">({dep.note})</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs text-text-muted mt-4 mb-2">Then clone and run:</p>
-            <div className="flex items-center gap-2 bg-surface-900/50 rounded px-3 py-2">
-              <code className="text-xs text-text-secondary font-mono">
-                git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh
-              </code>
-              <CopyButton text="git clone https://github.com/Ushadow-io/Ushadow.git && cd Ushadow && ./go.sh" />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
