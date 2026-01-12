@@ -4,11 +4,11 @@ import QuickInstall from '@/components/QuickInstall';
 
 const features = [
   {
-    name: 'Service Orchestration',
-    description: 'Stateless configuration via YAML files following GitOps methodology. Deploy across Unodes with Docker or Kubernetes.',
+    name: 'Visual Service Wiring',
+    description: 'Drag-and-drop providers to capabilities. Connect OpenAI to services, create model instances (GPT-5), and see your architecture at a glance.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
       </svg>
     ),
     color: 'primary',
@@ -24,21 +24,21 @@ const features = [
     color: 'accent',
   },
   {
-    name: 'Secret & Key Management',
-    description: 'Securely share secrets and API keys across containers. Centralized credential management with automatic rotation support.',
+    name: 'GitOps Configuration',
+    description: 'Everything in YAML files. Version control your entire stack—commit, branch, share configs. Stateless by design, hackable by default.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
       </svg>
     ),
     color: 'primary',
   },
   {
-    name: 'Service Add-on Wizard',
-    description: 'Easily extend your platform with new services. Guided wizards walk you through configuration and deployment in minutes.',
+    name: 'Drop-in Service Registry',
+    description: 'Add any service by dropping a compose file into the registry. Auto-detected, wizard-configured, instantly deployable.',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
     color: 'accent',
@@ -120,15 +120,15 @@ export default function Home() {
 
             {/* Headline */}
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-              <span className="text-text-primary">One Platform.</span>
+              <span className="text-text-primary">Developer Platform.</span>
               <br />
-              <span className="gradient-text">All Your AI Services.</span>
+              <span className="gradient-text">Build Your AI Assistant.</span>
             </h1>
 
             {/* Subheadline */}
             <p className="mt-6 text-lg leading-8 text-text-secondary max-w-2xl mx-auto">
-              Orchestrate services across Unodes with Docker and Kubernetes. Record meetings via Chronicle, capture
-              conversations with Omi, manage secrets, and extend with easy add-on wizards.
+              Hackable, extensible framework for building AI systems. Drop in containers, configure via YAML,
+              wire services visually, and deploy anywhere—Docker, Kubernetes, or remote nodes.
             </p>
 
             {/* CTAs */}
