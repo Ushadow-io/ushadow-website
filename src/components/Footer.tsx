@@ -13,6 +13,7 @@ const footerNavigation = {
     { name: 'YouTube', href: 'https://www.youtube.com/channel/UCWnYiTB8UaoaKTzVMQvIr0A' },
     { name: 'Issues', href: 'https://github.com/Ushadow-io/Ushadow/issues' },
     { name: 'Discussions', href: 'https://github.com/Ushadow-io/Ushadow/discussions' },
+    { name: 'Contact', href: '/contact' },
   ],
   legal: [
     { name: 'Privacy Policy', href: '/privacy' },

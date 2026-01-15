@@ -25,18 +25,38 @@ export default function Privacy() {
             </p>
           </section>
 
+          <section className="bg-primary-500/10 border border-primary-500/30 rounded-lg px-6 py-5">
+            <h2 className="text-xl font-semibold text-primary-400 mb-4">Local Data Storage - Your Privacy First</h2>
+            <div className="space-y-3 text-text-secondary">
+              <p className="text-text-primary font-medium">
+                <strong>All data is stored locally on your device.</strong> No recordings, workflows, secrets,
+                or any other data you create within Ushadow is ever transmitted to our servers or any third party.
+              </p>
+
+              <p><strong className="text-text-primary">Anonymous Install Tracking:</strong> The only data we collect
+              is a single anonymous tracking request when you install Ushadow. This request includes:</p>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>A hash of your machine identifier (anonymized, non-reversible)</li>
+                <li>Your operating system type and version</li>
+                <li>Ushadow version installed</li>
+              </ul>
+
+              <p className="mt-3">
+                <strong className="text-text-primary">No personal information is transmitted.</strong> We cannot
+                identify individual users, track usage patterns, or access any of your data. This minimal tracking
+                helps us understand adoption and prioritize platform support.
+              </p>
+            </div>
+          </section>
+
           <section>
-            <h2 className="text-xl font-semibold text-text-primary mb-4">Information We Collect</h2>
+            <h2 className="text-xl font-semibold text-text-primary mb-4">Website Information Collection</h2>
             <div className="space-y-4 text-text-secondary">
               <p><strong className="text-text-primary">Website Analytics:</strong> We collect anonymous usage data
               including pages visited, time spent, and general location (country level) to improve our website.</p>
 
               <p><strong className="text-text-primary">Newsletter:</strong> If you subscribe to our newsletter,
               we collect your email address and optionally your name. This is processed by Buttondown.</p>
-
-              <p><strong className="text-text-primary">Self-Hosted Software:</strong> The Ushadow platform runs
-              entirely on your own infrastructure. We do not have access to your data, recordings, secrets,
-              or any information processed by your self-hosted instance.</p>
             </div>
           </section>
 
@@ -98,8 +118,8 @@ export default function Privacy() {
             <h2 className="text-xl font-semibold text-text-primary mb-4">Contact</h2>
             <p className="text-text-secondary">
               Questions about this policy? Contact us at{' '}
-              <a href="mailto:privacy@ushadow.io" className="text-primary-400 hover:underline">
-                privacy@ushadow.io
+              <a href="mailto:stu@ushadow.io" className="text-primary-400 hover:underline">
+                stu@ushadow.io
               </a>
             </p>
           </section>
