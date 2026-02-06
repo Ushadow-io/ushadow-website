@@ -162,8 +162,13 @@ export default function NewsPage() {
             </p>
 
             <div className="mt-12 flex items-center justify-center gap-8">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-accent-500/20 text-accent-400 mb-3">
+              <a
+                href="https://github.com/mycelia-tech/mycelia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center group"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-accent-500/20 text-accent-400 mb-3 group-hover:bg-accent-500/30 transition-colors">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                     {/* Toadstool cap */}
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 11c0-4.5 3.5-8 8-8s8 3.5 8 8c0 1.5-0.5 2.5-1.5 3.5" />
@@ -176,19 +181,24 @@ export default function NewsPage() {
                     <circle cx="12" cy="6" r="0.8" fill="currentColor" />
                   </svg>
                 </div>
-                <p className="text-sm font-medium text-text-muted">Mycelia</p>
-              </div>
+                <p className="text-sm font-medium text-text-muted group-hover:text-text-primary transition-colors">Mycelia</p>
+              </a>
 
               <div className="text-primary-400 text-3xl font-bold">+</div>
 
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-accent-500/20 text-accent-400 mb-3">
+              <a
+                href="https://github.com/SimpleOpenSoftware/chronicle"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center group"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-accent-500/20 text-accent-400 mb-3 group-hover:bg-accent-500/30 transition-colors">
                   <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>
                 </div>
-                <p className="text-sm font-medium text-text-muted">Chronicle</p>
-              </div>
+                <p className="text-sm font-medium text-text-muted group-hover:text-text-primary transition-colors">Chronicle</p>
+              </a>
             </div>
           </div>
         </div>
