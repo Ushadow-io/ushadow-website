@@ -4,6 +4,28 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'News - Ushadow',
   description: 'Latest news and updates from Ushadow. Discover new features in Release 1 including dual-stream recording, mobile app, unified login, and more.',
+  openGraph: {
+    title: 'Ushadow Release 1 - New Features',
+    description: 'Use both Mycelia AND Chronicle! Plus dual-stream recording, fully-featured mobile app, unified SSO login, memories with graph mode, and Kubernetes deployment.',
+    url: 'https://ushadow.io/news',
+    siteName: 'Ushadow',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ushadow Release 1 - New Features',
+      },
+    ],
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ushadow Release 1 - New Features',
+    description: 'Use both Mycelia AND Chronicle! Plus dual-stream recording, mobile app, unified login, memories, and K8s deployment.',
+    images: ['/og-image.png'],
+  },
 };
 
 const releaseFeatures = [
