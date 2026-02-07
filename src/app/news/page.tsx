@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     siteName: 'Ushadow',
     images: [
       {
-        url: '/og-image.png',
+        url: '/news-og-image.png',
         width: 1200,
         height: 630,
         alt: 'Ushadow Release 1 - New Features',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Ushadow Release 1 - New Features',
     description: 'Use both Mycelia AND Chronicle! Plus dual-stream recording, mobile app, unified login, memories, and K8s deployment.',
-    images: ['/og-image.png'],
+    images: ['/news-og-image.png'],
   },
 };
 
